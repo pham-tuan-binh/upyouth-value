@@ -145,8 +145,8 @@ class Example extends Phaser.Scene {
       surveyAnswers.push(
         new CoreValueSprite(
           this,
-          (this.layoutPadding + 15) * (i + 1),
-          (this.layoutPadding + 15) * (i + 1),
+          this.layoutPadding * 2 + 64 * i,
+          50,
           coreValues[i].name,
           coreValues[i].description,
           coreValues[i].emoji

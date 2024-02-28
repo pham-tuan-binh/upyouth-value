@@ -5,7 +5,7 @@ import threading
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-PORT = 3000
+PORT = 1000
 DIRECTORY = "./"  # Replace with your directory
 
 class ChangeHandler(FileSystemEventHandler):
