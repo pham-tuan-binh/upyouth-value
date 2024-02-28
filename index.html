@@ -1,16 +1,123 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser-arcade-physics.min.js"></script>
     <script src="core_values.js"></script>
-    <script src="index.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="flex w-screen h-screen items-center justify-center bg-violet-200 p-16">
+    <div class="flex flex-col md:hidden">
+        <h1 id="core-value-name" class="vt323-regular text-4xl uppercase text-violet-700">Please use your computer to do this survey.</h1>
+        <div id="core-value-description" class="flex-grow vt323-regular text-xl text-violet-500">
+            I'm too lazy to do responsive, so you have to suffer.
+        </div>
+    </div>
+    <div class="flex-row gap-16 hidden md:flex">
+        <div id="canvas-container">
+        </div>
+        <div class="flex flex-col gap-4 max-w-96 w-96 text-bold">
+            <h1 id="core-value-name" class="vt323-regular text-4xl uppercase text-violet-700"> Welcome to UpYouth's Core Values Survey</h1>
+            <div id="core-value-description" class="flex-grow vt323-regular text-xl text-violet-500">
+                At UpYouth, we uphold 9 core values, each with varying learning curves and levels of applicability.
+                <br/>
+                The x-axis spans from steep learning (requiring 5 years of hands-on experience) to easy acquisition (a mere month at UpYouth).
+                <br/>
+                On the y-axis, values range from seldom used (absent from work) to frequent application (integral to daily tasks).
+                <br/>
+                Your task is to position each animal, symbolizing a core value, according to its perceived merit.
+            </div>
+            <div>
+                <div class="pixel"><p>Submit your answer!</p></div>
+            </div>
+        </div>
+    </div>
+    <script src="index.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
+        .vt323-regular {
+            font-family: "VT323", monospace;
+            font-weight: 400;
+            font-style: normal;
         }
-        </style>
+
+        .pixel {
+            font-size: 25px;
+            color: white;
+            height: auto;
+            font-family: 'VT323';
+            
+            position: relative;
+            display: inline-block;
+            vertical-align: top;
+            text-transform: uppercase;
+            
+            cursor: pointer;
+            
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .pixel:active {
+            top: 2px;
+        }
+
+        .pixel {
+            line-height: 0;
+            
+            image-rendering: optimizeSpeed;
+            image-rendering: -moz-crisp-edges; /* Firefox */
+            image-rendering: -o-crisp-edges; /* Opera */
+            image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
+            image-rendering: crisp-edges;
+            -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+            
+            border-style: solid;
+            border-color: rgb(109 40 217);
+            border-width: 20px;
+            border-radius: 10px;
+        }
+
+        .pixel p {
+            display: inline-block;
+            vertical-align: top;
+            position: relative;
+            width: auto;
+            text-align: center;
+            margin: -20px -20px;
+            line-height: 20px;
+            padding: 10px 20px;
+            
+            background: rgb(109 40 217);
+            background:
+                linear-gradient(135deg, transparent 10px, rgb(109 40 217) 0) top left,
+                linear-gradient(225deg, transparent 10px, rgb(109 40 217) 0) top right,
+                linear-gradient(315deg, transparent 10px, rgb(109 40 217) 0) bottom right,
+                linear-gradient(45deg,  transparent 10px, rgb(109 40 217) 0) bottom left;
+            background-size: 50% 50%;
+            background-repeat: no-repeat;
+            background-image:
+                radial-gradient(circle at 0 0, rgba(204,0,0,0) 14px, rgb(109 40 217) 15px),
+                radial-gradient(circle at 100% 0, rgba(204,0,0,0) 14px, rgb(109 40 217) 15px),
+                radial-gradient(circle at 100% 100%, rgba(204,0,0,0) 14px, rgb(109 40 217) 15px),
+                radial-gradient(circle at 0 100%, rgba(204,0,0,0) 14px, rgb(109 40 217) 15px);
+        }
+
+        #canvas-container {
+            border-radius: 30px;
+            overflow: hidden;
+            border-style: solid;
+            border-color: rgb(109 40 217);
+            border-width: 12px;
+        }
+    </style>
 </body>
 </html>

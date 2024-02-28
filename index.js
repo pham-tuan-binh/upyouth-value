@@ -1,33 +1,114 @@
-let width = window.innerWidth;
-let height = window.innerHeight;
+const width = 540;
+const height = 540;
+
+const nameElement = document.getElementById("core-value-name");
+const descriptionElement = document.getElementById("core-value-description");
 
 class CoreValueSprite extends Phaser.GameObjects.Container {
   constructor(scene, x, y, name, description, image) {
     super(scene, x, y);
 
-    let imageElement = scene.add.image(0, 0, image);
+    // Set Var
+    this.learningCurve = 0;
+    this.usageFrequency = 0;
+    this.name = name;
+    this.description = description;
 
-    this.add([imageElement]);
+    // Set item
+    this.imageElement = scene.add.image(0, 0, image);
 
-    this.setSize(100, 100);
-
-    this.setInteractive({ draggable: true });
-
-    this.on(
-      "dragstart",
-      function (pointer, gameObject) {
-        //  This will bring the selected gameObject to the top of the list
-        scene.children.bringToTop(this);
-
-        scene.current_name.setText(name);
-        scene.current_description.setText(description);
-      },
-      this
+    // Set horizontal guide
+    this.horizontalGuide = scene.add.line(
+      this.x,
+      this.y,
+      0,
+      0,
+      width / 2 - this.x,
+      0,
+      0xffffff,
+      0.75
     );
+    this.horizontalGuide.setOrigin(0);
+    this.horizontalGuide.setVisible(0);
 
-    this.on("drag", (pointer, dragX, dragY) => this.setPosition(dragX, dragY));
+    this.horizontalGuideText = scene.add.text(
+      width / 2,
+      this.y,
+      width / 2 - this.x
+    );
+    this.horizontalGuideText.setVisible(0);
+
+    // Set vertical guide
+    this.verticalGuide = scene.add.line(
+      this.x,
+      this.y,
+      0,
+      0,
+      0,
+      height / 2 - this.y,
+      0xffffff,
+      0.75
+    );
+    this.verticalGuide.setOrigin(0);
+    this.verticalGuide.setVisible(0);
+
+    this.verticalGuideText = scene.add.text(
+      this.x,
+      height / 2,
+      height / 2 - this.y
+    );
+    this.verticalGuideText.setVisible(0);
+
+    // Set Container
+    this.add([this.imageElement]);
+    this.setSize(38, 38);
+
+    // Set Interaction
+    this.setInteractive({ draggable: true });
+    this.on("dragstart", this.onDragStart);
+    this.on("dragend", this.onDragEnd);
+    this.on("drag", this.onDrag);
 
     scene.add.existing(this);
+  }
+
+  onDrag(pointer, dragX, dragY) {
+    this.setPosition(dragX, dragY);
+    this.horizontalGuide.setPosition(this.x, this.y);
+    this.horizontalGuide.setTo(0, 0, width / 2 - this.x, 0);
+
+    this.verticalGuide.setPosition(this.x, this.y);
+    this.verticalGuide.setTo(0, 0, 0, height / 2 - this.y);
+
+    this.horizontalGuideText.setPosition(width / 2, this.y);
+    this.verticalGuideText.setPosition(this.x, height / 2);
+
+    this.usageFrequency = Math.floor(((height / 2 - this.y) / 248) * 100);
+    this.learningCurve = Math.floor(((this.x - width / 2) / 248) * 100);
+
+    this.horizontalGuideText.setText(this.usageFrequency);
+    this.verticalGuideText.setText(this.learningCurve);
+  }
+
+  onDragEnd(pointer, gameObject) {
+    this.horizontalGuide.setVisible(0);
+    this.verticalGuide.setVisible(0);
+
+    this.verticalGuideText.setVisible(0);
+    this.horizontalGuideText.setVisible(0);
+  }
+
+  onDragStart(pointer, gameObject) {
+    this.scene.children.bringToTop(this);
+    this.horizontalGuide.setVisible(1);
+    this.verticalGuide.setVisible(1);
+
+    this.verticalGuideText.setVisible(1);
+    this.horizontalGuideText.setVisible(1);
+    console.log(nameElement);
+
+    nameElement.innerHTML = this.name;
+    descriptionElement.innerHTML = this.description;
   }
 }
 
@@ -47,7 +128,6 @@ class Example extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("bg", "https://labs.phaser.io/assets/skies/gradient13.png");
     this.load.path = "assets/";
     this.load.image("cat", "animals/cat.png");
     this.load.image("chicken", "animals/chicken.png");
@@ -57,132 +137,31 @@ class Example extends Phaser.Scene {
     this.load.image("fish", "animals/fish.png");
     this.load.image("frog", "animals/frog.png");
     this.load.image("lion", "animals/lion.png");
+    this.load.image("bg", "background/upyouth-matrix.png");
   }
 
   create() {
+    this.add.image(270, 270, "bg");
     for (let i = 0; i < coreValues.length; i++) {
       let container = new CoreValueSprite(
         this,
         (this.layoutPadding + 15) * (i + 1),
-        this.layoutPadding,
+        (this.layoutPadding + 15) * (i + 1),
         coreValues[i].name,
         coreValues[i].description,
         coreValues[i].emoji
       );
     }
-
-    let matrixContainer = this.add.container(
-      this.layoutPadding,
-      this.layoutPadding
-    );
-
-    matrixContainer.width = width - 2 * this.layoutPadding;
-    matrixContainer.height =
-      height * (1 - this.layoutDivider) - 2 * this.layoutPadding;
-
-    let verticalLine = this.add.line(
-      matrixContainer.width / 2 + this.layoutPadding,
-      this.layoutPadding,
-      0,
-      0,
-      0,
-      matrixContainer.height,
-      0x6666ff,
-      0.5
-    );
-
-    let horizontalLine = this.add.line(
-      matrixContainer.width / 2 +
-        this.layoutPadding -
-        matrixContainer.height / 2,
-      matrixContainer.height / 2 + this.layoutPadding,
-      0,
-      0,
-      matrixContainer.height,
-      0,
-      0x6666ff,
-      0.5
-    );
-
-    verticalLine.setOrigin(0);
-    horizontalLine.setOrigin(0);
-
-    let tag = this.add.text(
-      matrixContainer.width / 2 + this.layoutPadding,
-      matrixContainer.height / 2 + this.layoutPadding,
-      "UpYouth Matrix"
-    );
-
-    tag.setOrigin(0.5);
-
-    let cantlearn = this.add.text(
-      matrixContainer.width / 2 +
-        this.layoutPadding -
-        matrixContainer.height / 2,
-      matrixContainer.height / 2 + this.layoutPadding,
-      "Can't Learn"
-    );
-
-    cantlearn.setOrigin(0.5);
-
-    let easytolearn = this.add.text(
-      matrixContainer.width / 2 +
-        this.layoutPadding +
-        matrixContainer.height / 2,
-      matrixContainer.height / 2 + this.layoutPadding,
-      "Easy to learn"
-    );
-
-    easytolearn.setOrigin(0.5);
-
-    let nousage = this.add.text(
-      matrixContainer.width / 2 + this.layoutPadding,
-      matrixContainer.height,
-      "Haven't use this at all"
-    );
-
-    nousage.setOrigin(0.5);
-
-    let lotsusage = this.add.text(
-      matrixContainer.width / 2 + this.layoutPadding,
-      this.layoutPadding * 2,
-      "Use this all the time"
-    );
-
-    lotsusage.setOrigin(0.5);
-
-    this.current_name = this.add
-      .text(
-        this.layoutPadding,
-        height * (1 - this.layoutDivider),
-        "Click an animal to see its thing."
-      )
-      .setFontSize(24)
-      .setShadow(1, 1);
-
-    this.current_description = this.add
-      .text(
-        this.layoutPadding,
-        height * (1 - this.layoutDivider) + this.layoutPadding * 2,
-        "Click an animal to see its thing.",
-        {
-          font: "25px Helvetica",
-          fill: "white",
-          wordWrap: { width: window.innerWidth / 2 },
-        }
-      )
-      .setFontSize(24)
-      .setShadow(1, 1);
   }
 }
 
 const config = {
   type: Phaser.AUTO,
   scale: {
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: width,
+    height: height,
   },
-  parent: "phaser-example",
+  parent: "canvas-container",
   scene: Example,
 };
 
