@@ -24,7 +24,7 @@
         <div class="flex flex-col gap-4 max-w-96 w-96 text-bold">
             <h1 id="core-value-name" class="vt323-regular text-4xl uppercase text-violet-700"> Welcome to UpYouth's Core Values Survey</h1>
             <div id="core-value-description" class="flex-grow vt323-regular text-xl text-violet-500">
-                At UpYouth, we uphold 9 core values, each with varying learning curves and levels of applicability.
+                At UpYouth, we uphold 3 core values, each with varying learning curves and levels of applicability.
                 <br/>
                 The x-axis spans from steep learning (requiring 5 years of hands-on experience) to easy acquisition (a mere month at UpYouth).
                 <br/>
@@ -33,7 +33,18 @@
                 Your task is to position each animal, symbolizing a core value, according to its perceived merit.
             </div>
             <div>
-                <div class="pixel"><p>Submit your answer!</p></div>
+                <select id="department-choice" name="departments" class="bg-violet-300 border border-gray-300 text-violet-700 vt323-regular text-2xl rounded-xl px-6 py-2 w-1/2 inline-block">
+                    <option value="pre" class="uppercase" selected="selected">President</option>
+                    <option value="bot" class="uppercase">Board of Trustees</option>
+                    <option value="erp" class="uppercase">External Relations & Partnerships</option>
+                    <option value="sk" class="uppercase">Startup Knowledge</option>
+                    <option value="grw" class="uppercase">Growth</option>
+                    <option value="poc" class="uppercase">People Operations & Culture</option>
+                    <option value="other" class="uppercase">Others</option>
+                </select>
+            </div>
+            <div>
+                <button id="submit-button" class="bg-violet-700 px-6 py-2 vt323-regular uppercase text-2xl text-white rounded-xl inline-block hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300"><p>Submit your answer!</p></button>
             </div>
         </div>
     </div>
@@ -43,72 +54,6 @@
             font-family: "VT323", monospace;
             font-weight: 400;
             font-style: normal;
-        }
-
-        .pixel {
-            font-size: 25px;
-            color: white;
-            height: auto;
-            font-family: 'VT323';
-            
-            position: relative;
-            display: inline-block;
-            vertical-align: top;
-            text-transform: uppercase;
-            
-            cursor: pointer;
-            
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
-        .pixel:active {
-            top: 2px;
-        }
-
-        .pixel {
-            line-height: 0;
-            
-            image-rendering: optimizeSpeed;
-            image-rendering: -moz-crisp-edges; /* Firefox */
-            image-rendering: -o-crisp-edges; /* Opera */
-            image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
-            image-rendering: crisp-edges;
-            -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
-            
-            border-style: solid;
-            border-color: rgb(109 40 217);
-            border-width: 20px;
-            border-radius: 10px;
-        }
-
-        .pixel p {
-            display: inline-block;
-            vertical-align: top;
-            position: relative;
-            width: auto;
-            text-align: center;
-            margin: -20px -20px;
-            line-height: 20px;
-            padding: 10px 20px;
-            
-            background: rgb(109 40 217);
-            background:
-                linear-gradient(135deg, transparent 10px, rgb(109 40 217) 0) top left,
-                linear-gradient(225deg, transparent 10px, rgb(109 40 217) 0) top right,
-                linear-gradient(315deg, transparent 10px, rgb(109 40 217) 0) bottom right,
-                linear-gradient(45deg,  transparent 10px, rgb(109 40 217) 0) bottom left;
-            background-size: 50% 50%;
-            background-repeat: no-repeat;
-            background-image:
-                radial-gradient(circle at 0 0, rgba(204,0,0,0) 14px, rgb(109 40 217) 15px),
-                radial-gradient(circle at 100% 0, rgba(204,0,0,0) 14px, rgb(109 40 217) 15px),
-                radial-gradient(circle at 100% 100%, rgba(204,0,0,0) 14px, rgb(109 40 217) 15px),
-                radial-gradient(circle at 0 100%, rgba(204,0,0,0) 14px, rgb(109 40 217) 15px);
         }
 
         #canvas-container {

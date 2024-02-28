@@ -3,6 +3,10 @@ const height = 540;
 
 const nameElement = document.getElementById("core-value-name");
 const descriptionElement = document.getElementById("core-value-description");
+const submitButtonElement = document.getElementById("submit-button");
+const departmentChoiceElement = document.getElementById("department-choice");
+
+let surveyAnswers = [];
 
 class CoreValueSprite extends Phaser.GameObjects.Container {
   constructor(scene, x, y, name, description, image) {
@@ -16,6 +20,7 @@ class CoreValueSprite extends Phaser.GameObjects.Container {
 
     // Set item
     this.imageElement = scene.add.image(0, 0, image);
+    this.imageElement.setScale(0.9);
 
     // Set horizontal guide
     this.horizontalGuide = scene.add.line(
@@ -61,7 +66,7 @@ class CoreValueSprite extends Phaser.GameObjects.Container {
 
     // Set Container
     this.add([this.imageElement]);
-    this.setSize(38, 38);
+    this.setSize(56, 56);
 
     // Set Interaction
     this.setInteractive({ draggable: true });
@@ -105,7 +110,6 @@ class CoreValueSprite extends Phaser.GameObjects.Container {
 
     this.verticalGuideText.setVisible(1);
     this.horizontalGuideText.setVisible(1);
-    console.log(nameElement);
 
     nameElement.innerHTML = this.name;
     descriptionElement.innerHTML = this.description;
@@ -129,31 +133,70 @@ class Example extends Phaser.Scene {
 
   preload() {
     this.load.path = "assets/";
-    this.load.image("cat", "animals/cat.png");
-    this.load.image("chicken", "animals/chicken.png");
-    this.load.image("cow", "animals/cow.png");
-    this.load.image("cub", "animals/cub.png");
-    this.load.image("dog", "animals/dog.png");
-    this.load.image("fish", "animals/fish.png");
-    this.load.image("frog", "animals/frog.png");
-    this.load.image("lion", "animals/lion.png");
+    this.load.image("vu", "leaders/vu.png");
+    this.load.image("thile", "leaders/thile.png");
+    this.load.image("thanh", "leaders/thanh.png");
     this.load.image("bg", "background/upyouth-matrix.png");
   }
 
   create() {
     this.add.image(270, 270, "bg");
     for (let i = 0; i < coreValues.length; i++) {
-      let container = new CoreValueSprite(
-        this,
-        (this.layoutPadding + 15) * (i + 1),
-        (this.layoutPadding + 15) * (i + 1),
-        coreValues[i].name,
-        coreValues[i].description,
-        coreValues[i].emoji
+      surveyAnswers.push(
+        new CoreValueSprite(
+          this,
+          (this.layoutPadding + 15) * (i + 1),
+          (this.layoutPadding + 15) * (i + 1),
+          coreValues[i].name,
+          coreValues[i].description,
+          coreValues[i].emoji
+        )
       );
     }
   }
 }
+
+function getAnswers(answersArray) {
+  let arrayResult = [];
+  for (let elem of answersArray) {
+    arrayResult.push({
+      name: elem.name.toLowerCase().replace(/ /g, "-"),
+      learningCurve: elem.learningCurve,
+      usageFrequency: elem.usageFrequency,
+    });
+  }
+
+  let result = {
+    answers: arrayResult,
+    department: departmentChoiceElement.value,
+  };
+
+  return result;
+}
+
+submitButtonElement.addEventListener("click", function (data) {
+  submitButtonElement.innerText = "Loading...";
+
+  this.disabled = true;
+
+  fetch(
+    "https://script.google.com/macros/s/AKfycbwcdg4VAg8Z8zC3VIAT4T79XfOePPxybpAVL-4gmpehdehBfBr3lkEVMK1EJz7gGXD6eg/exec",
+    {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Master-key":
+          "$2a$10$UPENydFvCI4YhSlXJbof7.y7L/e9wVT7wZvzoo8LiVdJkr62/8D/G", // Your master key here
+      },
+      body: JSON.stringify(getAnswers(surveyAnswers)),
+    }
+  )
+    .then((response) => {
+      submitButtonElement.innerText = "Thank you for your service.";
+    })
+    .catch((error) => console.error("Error:", error));
+});
 
 const config = {
   type: Phaser.AUTO,
