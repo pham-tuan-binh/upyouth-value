@@ -159,6 +159,10 @@ class Example extends Phaser.Scene {
 function getAnswers(answersArray) {
   let arrayResult = [];
   for (let elem of answersArray) {
+    if (elem.learningCurve == 0 && elem.usageFrequency == 0) {
+      return false;
+    }
+
     arrayResult.push({
       name: elem.name.toLowerCase().replace(/ /g, "-"),
       learningCurve: elem.learningCurve,
@@ -175,8 +179,14 @@ function getAnswers(answersArray) {
 }
 
 submitButtonElement.addEventListener("click", function (data) {
-  submitButtonElement.innerText = "Loading...";
+  let result = getAnswers(surveyAnswers);
 
+  if (result === false) {
+    alert("Finish your mission first!");
+    return;
+  }
+
+  submitButtonElement.innerText = "Loading...";
   this.disabled = true;
 
   fetch(
@@ -189,7 +199,7 @@ submitButtonElement.addEventListener("click", function (data) {
         "X-Master-key":
           "$2a$10$UPENydFvCI4YhSlXJbof7.y7L/e9wVT7wZvzoo8LiVdJkr62/8D/G", // Your master key here
       },
-      body: JSON.stringify(getAnswers(surveyAnswers)),
+      body: JSON.stringify(result),
     }
   )
     .then((response) => {
